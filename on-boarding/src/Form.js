@@ -55,6 +55,14 @@ const FormikNewUserForm = withFormik({
         Email: Yup.string().required("Valid email is required"),
         ToS: Yup.bool().oneOf([true], "You cannot continue without agreeing to the terms of service"),
     }),
+    handleSubmit(values, {setStatus}) {
+        axios
+        .post(" https://reqres.in/api/users", values)
+        .then(res => {
+            setStatus(res.data);
+        })
+        .catch(err => console.log(err.response));
+    }
 })(NewUserForm)
 
 export default FormikNewUserForm;
