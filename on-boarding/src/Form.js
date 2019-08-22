@@ -18,21 +18,43 @@ const NewUserForm = ({ errors, touched, values, status }) => {
         <div className="New-User">
             <h1>New User</h1>
             <Form>
-                <Field type="text" name="Name" placeholder="Name" />{touched.Name && errors.Name && (
+                <Field type="text" name="Username" placeholder="Name" />{touched.Username && errors.Username && (
                     <p className="error"
-                    >{errors.Name}</p>)}
+                    >{errors.Username}</p>)}
+
                 <Field type="email" name="Email" placeholder="example@email.com" />{touched.Email && errors.Email && <p className="error">{errors.Email}</p>}
+
                 <Field type="password" name="Password" placeholder="Password" />{touched.Password && errors.Password && <p className="error">{errors.Password}</p>}
 
                 <label className="checkbox-ToS"> I agree with Terms of Service
+
                 <Field
-                type="checkbox"
-                name="ToS"
-                checked={values.ToS}/><span className="checkmark"/></label>
+                        type="checkbox"
+                        name="ToS"
+                        checked={values.ToS} /><span className="checkmark" /></label>
+
                 <button type="submit">Submit!</button>
             </Form>
         </div>
     )
 }
 
-export default NewUserForm;
+const FormikNewUserForm = withFormik({
+    mapsPropsToValues({ Username, Email, Password, ToS }) {
+        return {
+            Username: Username || "",
+            Email: Email || "",
+            Password: Password || "",
+            ToS: ToS || false,
+
+        };
+    },
+    validationSchema: Yup.object().shape({
+        Username: Yup.string().required("UserName is not valid"),
+        Password: Yup.string().required("Incorrect Password"),
+        Email: Yup.string().required("Valid email is required"),
+        ToS: Yup.bool().oneOf([true], "You cannot continue without agreeing to the terms of service"),
+    }),
+})(NewUserForm)
+
+export default FormikNewUserForm;
